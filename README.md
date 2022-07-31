@@ -1,12 +1,18 @@
 # binance-auto-trading
 
+### INSTALL
+***
+```
+pip install -r requirements.txt
+```
+
 ### RUN
 ***
 ```
 python -m binance-auto-trading
 ```
 
-### Backtesting
+### BACKTESTING
 ***
 ```
 python backtest.py
