@@ -1,6 +1,7 @@
 # 설정 파일 관리
 import configparser
 import os
+from .config import config
 
 USER_CFG="user.cfg"
 

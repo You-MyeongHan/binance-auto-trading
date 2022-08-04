@@ -6,10 +6,16 @@
 pip install -r requirements.txt
 ```
 
-### RUN
+### RUN SERVER
 ***
 ```
 python -m binance-auto-trading
+```
+
+### RUN CLIENT
+***
+```
+python -m client
 ```
 
 ### BACKTESTING
