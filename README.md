@@ -6,22 +6,16 @@
 pip install -r requirements.txt
 ```
 
-### RUN SERVER
-***
-```
-python -m binance-auto-trading
-```
-
 ### RUN CLIENT
 ***
 ```
 python -m client
 ```
 
-### BACKTESTING
+### RUN SERVER
 ***
 ```
-python backtest.py
+python manage.py runserver 192.168.0.3:8100
 ```
 
 ### Who We Are
