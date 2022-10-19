@@ -1,6 +1,23 @@
 from .database import Database
-import pymysql
+from .logger import Logger
+from .scheduler import SafeScheduler
+from .config import Config
+from api_manager import ApiManager
+from .scheduler import SafeScheduler
 
 def main():
-    def __init(self):
-        conn = pymysql.connect(host='localhost', user='root', password='1234', db='encore', charset='utf8')
+    logger = Logger()
+    logger.info("Starting")
+
+    config = Config()
+    db = Database(logger, config)
+    manager = ApiManager(config, db, logger)
+
+    try:
+        pass
+    except Exception as e:
+        logger.error("Can't access Binance API - API keys may be wrong or lack sufficient permissions") # modify later
+        logger.error(e)
+        return
+
+    schedule = SafeScheduler(logger)
