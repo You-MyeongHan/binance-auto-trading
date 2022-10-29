@@ -15,7 +15,7 @@ python -m client
 ### RUN SERVER
 ***
 ```
-python manage.py runserver 192.168.0.3:8100
+
 ```
 
 ### Who We Are
