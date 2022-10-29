@@ -50,6 +50,6 @@
 
 #     loop = asyncio.get_event_loop()
 #     loop.run_until_complete(main())
-class test:
-    def testing(self):
-        print("testing...")
+# class test:
+#     def testing(self):
+#         print("testing...")
