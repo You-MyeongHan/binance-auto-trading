@@ -6,10 +6,10 @@ from tensorflow import function, GradientTape, sqrt, abs, reduce_mean, ones_like
 from tensorflow import data as tfdata
 from tensorflow import config as tfconfig
 from tensorflow import nn
-from tensorflow.keras import Model, Sequential, Input
-from tensorflow.keras.layers import GRU, LSTM, Dense
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.losses import BinaryCrossentropy, MeanSquaredError
+from tensorflow.python.keras import Model, Sequential, Input
+from tensorflow.python.keras.layers import GRU, LSTM, Dense
+from tensorflow.python.keras.optimizer_v2.adam import Adam
+from tensorflow.python.keras.losses import BinaryCrossentropy, MeanSquaredError
 
 import numpy as np
 #from tqdm import tqdm, trange
@@ -22,4 +22,4 @@ class Prediction:
         self.date=None
 
     def create_data(self):
-        pass
+        print("testing")

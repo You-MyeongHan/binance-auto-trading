@@ -4282,3 +4282,6 @@ Traceback (most recent call last):
     ret = self.job_func()
 TypeError: testing() missing 1 required positional argument: 'self'
 
+2022-10-29 15:15:39,434 - auto_trading_logger - INFO - Starting
+2022-10-31 02:28:50,018 - auto_trading_logger - INFO - Starting
+2022-10-31 02:30:44,423 - auto_trading_logger - INFO - Starting

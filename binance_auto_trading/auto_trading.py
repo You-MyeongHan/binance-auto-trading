@@ -5,7 +5,7 @@ from .scheduler import SafeScheduler
 from .config import Config
 from .api_manager import ApiManager
 from .scheduler import SafeScheduler
-from .test import test
+from .prediction import Prediction
 
 def main():
     logger = Logger()
@@ -14,6 +14,7 @@ def main():
     config = Config()
     db = Database(logger, config)
     manager = ApiManager(config, db, logger)
+    prediction=Prediction()
 
     try:
         pass
@@ -23,7 +24,7 @@ def main():
         return
 
     schedule = SafeScheduler(logger)
-    schedule.every(config.PREDICTION_WAITING_TIME).seconds.do(test.testing).tag("test stage...")
+    schedule.every(config.PREDICTION_WAITING_TIME).seconds.do(prediction.create_data).tag("creating prediction data") # execute every 5minutes
     
     try:
         while True:

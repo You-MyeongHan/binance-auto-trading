@@ -15,7 +15,7 @@ python -m client
 ### RUN SERVER
 ***
 ```
-
+python -m binance-auto-trading
 ```
 
 ### Who We Are
