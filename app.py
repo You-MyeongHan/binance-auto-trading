@@ -1,3 +1,4 @@
+import os
 import re
 import time
 from flask import Flask, jsonify, request
@@ -10,7 +11,7 @@ from binance_auto_trading.database import *
 from binance_auto_trading.api_manager import *
 from binance_auto_trading.prediction import *
 from binance_auto_trading.lstm_model import lstm_prediction
-
+# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 app = Flask(__name__)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -35,7 +36,8 @@ def predict():
     prediction=lstm_prediction()
     data=prediction.create_one_data()
     
-    json_data=json.loads(data)
+    json_data='{"series_data":'+data.tolist()+'}'
+    json_data=json.dumps(json_data)
     return jsonify(json_data)
 
 @app.route("/api/get_balance", methods=['GET'])
