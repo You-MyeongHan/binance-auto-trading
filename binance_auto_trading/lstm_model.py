@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import MinMaxScaler
@@ -72,10 +72,13 @@ class lstm_prediction:
         y_pred =model.predict(x_test)
         
         y_pred = self.scaler.inverse_transform(y_pred)
-        one_hour_later=datetime.strftime(str(self.df['date'].iloc[-1]+3600000), "%Y-%m-%d %H:%m:%S")
-        pred_result=pd.DataFrame({'date':[], 'price':[y_pred[-1][0]]})
-        
+        one_hour_later=(self.df['date'].iloc[-1]+3600000)/1000
+        pred_result=pd.DataFrame({'date':[one_hour_later], 'price':[y_pred[-1][0]]})
+        pred_result=pred_result.to_json()
         return pred_result
+    
+    def create_ten_data():
+        pass
 
 if __name__ == "__main__":
     data = lstm_prediction()

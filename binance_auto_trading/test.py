@@ -54,39 +54,39 @@
 #     def testing(self):
 #         print("testing...")
 
-import csv
-import json
+# import csv
+# import json
 
-csvfile=open('financial_data.csv','r')
-jsonfile=open('financial_data.json','w')
+# csvfile=open('financial_data.csv','r')
+# jsonfile=open('financial_data.json','w')
 
-def make_json(csvFilePath, jsonFilePath):
+# def make_json(csvFilePath, jsonFilePath):
      
-    # create a dictionary
-    data = {}
+#     # create a dictionary
+#     data = {}
      
-    # Open a csv reader called DictReader
-    with open(csvFilePath, encoding='utf-8') as csvf:
-        csvReader = csv.DictReader(csvf)
+#     # Open a csv reader called DictReader
+#     with open(csvFilePath, encoding='utf-8') as csvf:
+#         csvReader = csv.DictReader(csvf)
          
-        # Convert each row into a dictionary
-        # and add it to data
-        for rows in csvReader:
+#         # Convert each row into a dictionary
+#         # and add it to data
+#         for rows in csvReader:
              
-            # Assuming a column named 'No' to
-            # be the primary key
-            key = rows['date']
-            data[key] = rows
+#             # Assuming a column named 'No' to
+#             # be the primary key
+#             key = rows['date']
+#             data[key] = rows
  
-    # Open a json writer, and use the json.dumps()
-    # function to dump data
-    with open(jsonFilePath, 'w', encoding='utf-8') as jsonf:
-        jsonf.write(json.dumps(data, ensure_ascii=False, indent=4))
+#     # Open a json writer, and use the json.dumps()
+#     # function to dump data
+#     with open(jsonFilePath, 'w', encoding='utf-8') as jsonf:
+#         jsonf.write(json.dumps(data, ensure_ascii=False, indent=4))
          
 
 
-csvFilePath = r'financial_data.csv'
-jsonFilePath = r'financial_data.json'
+# csvFilePath = r'financial_data.csv'
+# jsonFilePath = r'financial_data.json'
  
-# Call the make_json function
-make_json(csvFilePath, jsonFilePath)
+# # Call the make_json function
+# make_json(csvFilePath, jsonFilePath)
