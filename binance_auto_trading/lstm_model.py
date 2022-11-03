@@ -28,13 +28,14 @@ class lstm_prediction:
         self.coinData=self.coinData.loc[::-1].reset_index(drop=True)
         self.coinDataLen=len(self.coinData)
         
+        self.createdData=pd.DataFrame(columns={'date','price'})
 
-    def create_one_data(self):
+    def create_data(self):
         train_data=self.coinData.loc[:,'close'].to_frame() 
         test_data = self.df.loc[:, 'close'].to_frame() 
         
         train_data_sc=self.scaler.fit_transform(train_data) 
-        test_data_sc=self.scaler.fit_transform(test_data)
+        test_data_sc=self.scaler.transform(test_data)
         
         train_sc_df = pd.DataFrame(train_data_sc, columns=['Scaled'], index=train_data.index)
         test_sc_df = pd.DataFrame(test_data_sc, columns=['Scaled'], index=test_data.index)
@@ -48,9 +49,6 @@ class lstm_prediction:
         
         x_test=test_sc_df.dropna().drop('Scaled', axis=1)
         y_test=test_sc_df.dropna()[['Scaled']]
-        
-        train_data_sc=self.scaler.fit_transform(train_data)
-        test_data_sc=self.scaler.fit_transform(test_data)
         
         train_sc_df = pd.DataFrame(train_data_sc, columns=['Scaled'], index=train_data.index)
 
@@ -67,20 +65,27 @@ class lstm_prediction:
         model.compile(loss='mean_squared_error', optimizer='adam')
         early_stop = EarlyStopping(monitor='loss', patience=5) # 학습률 낮아지면 조기 종료
 
-        model.fit(x_train, y_train, epochs=50, batch_size=20, callbacks=[early_stop])
-        
-        y_pred =model.predict(x_test)
-        
+        model.fit(x_train, y_train, epochs=3, batch_size=20, callbacks=[early_stop]) #epoch 50이상으로
+
+        for i in range(10):    
+            y_pred =model.predict(x_test) #처음 490개
+
+            y_test.loc[len(y_test)]=[y_pred[-1][0]]
+            x_test.loc[len(x_test)]=[ y_test.iloc[-9],y_test.iloc[-8],y_test.iloc[-7],y_test.iloc[-6],y_test.iloc[-5],y_test.iloc[-4],y_test.iloc[-3],y_test.iloc[-2],y_test.iloc[-1],y_pred[-1][0]]
+            one_hour_later=(self.df['date'].iloc[-1]+3600000*(i+1))
+
+            self.append_data(one_hour_later, [y_pred[-1][0]])
+
         y_pred = self.scaler.inverse_transform(y_pred)
-        one_hour_later=(self.df['date'].iloc[-1]+3600000)/1000
+
         pred_result=pd.DataFrame({'date':[one_hour_later], 'price':[y_pred[-1][0]]})
         pred_result=pred_result.to_json()
         return pred_result
     
-    def create_ten_data():
-        pass
+    def append_data(self, date, price):
+        self.createdData[len(self.createdData)+1]=[date, price]
 
 if __name__ == "__main__":
     data = lstm_prediction()
-    data=data.create_one_data()
+    data=data.create_data()
     print(data)
