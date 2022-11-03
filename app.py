@@ -36,8 +36,8 @@ def predict():
     prediction=lstm_prediction()
     data=prediction.create_one_data()
     
-    json_data='{"series_data":'+data.tolist()+'}'
-    json_data=json.dumps(json_data)
+    json_data='{"series_data":"'+data+'"}'
+    # json_data=json.dumps(json_data)
     return jsonify(json_data)
 
 @app.route("/api/get_balance", methods=['GET'])
