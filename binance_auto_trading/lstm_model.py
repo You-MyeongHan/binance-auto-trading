@@ -1,5 +1,5 @@
 import os
-
+import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import MinMaxScaler
@@ -28,7 +28,7 @@ class lstm_prediction:
         self.coinData=self.coinData.loc[::-1].reset_index(drop=True)
         self.coinDataLen=len(self.coinData)
         
-        self.createdData=pd.DataFrame(columns={'date','price'})
+        self.createdData=pd.DataFrame(columns={'date','close'})
 
     def create_data(self):
         train_data=self.coinData.loc[:,'close'].to_frame() 
@@ -41,7 +41,7 @@ class lstm_prediction:
         test_sc_df = pd.DataFrame(test_data_sc, columns=['Scaled'], index=test_data.index)
         
         for i in range(1, 11):
-            train_sc_df['Scaled_{}'.format(i)]=train_sc_df ['Scaled'].shift(i) # 훈련 데이터 shape 10*(len-10)으로 변환
+            train_sc_df['Scaled_{}'.format(i)]=train_sc_df ['Scaled'].shift(i) # 훈련 데이터 shape (len-10)*10으로 변환
             test_sc_df['Scaled_{}'.format(i)]=test_sc_df ['Scaled'].shift(i)
 
         x_train=train_sc_df.dropna().drop('Scaled', axis=1)
@@ -66,24 +66,27 @@ class lstm_prediction:
         early_stop = EarlyStopping(monitor='loss', patience=5) # 학습률 낮아지면 조기 종료
 
         model.fit(x_train, y_train, epochs=3, batch_size=20, callbacks=[early_stop]) #epoch 50이상으로
-
+    
         for i in range(10):    
             y_pred =model.predict(x_test) #처음 490개
-
-            y_test.loc[len(y_test)]=[y_pred[-1][0]]
-            x_test.loc[len(x_test)]=[ y_test.iloc[-9],y_test.iloc[-8],y_test.iloc[-7],y_test.iloc[-6],y_test.iloc[-5],y_test.iloc[-4],y_test.iloc[-3],y_test.iloc[-2],y_test.iloc[-1],y_pred[-1][0]]
-            one_hour_later=(self.df['date'].iloc[-1]+3600000*(i+1))
-
-            self.append_data(one_hour_later, [y_pred[-1][0]])
-
-        y_pred = self.scaler.inverse_transform(y_pred)
-
-        pred_result=pd.DataFrame({'date':[one_hour_later], 'price':[y_pred[-1][0]]})
+            
+            y_test.loc[len(y_test)+10]=[y_pred[-1][0]]
+            x_test.loc[len(x_test)+10]=[y_pred[-1][0], float(y_test.iloc[-1]),float(y_test.iloc[-2]),float(y_test.iloc[-3]),float(y_test.iloc[-4]),float(y_test.iloc[-5]),float(y_test.iloc[-6]),float(y_test.iloc[-7]),float(y_test.iloc[-8]),float(y_test.iloc[-9])]
+            # one_hour_later=(self.df['date'].iloc[-1]+3600000*(i+1))
+        
+        y_pred = self.scaler.inverse_transform(y_pred) # 10시간 뒤 코인 가격 예상        
+        
+        price=y_pred.reshape(1,-1)[0]           #최종 가격
+        date=self.df['date'].to_numpy()[11:]
+        for i in range(10):
+            date=np.append(date, (date[-1]+3600000))  #최종 날짜
+            
+        pred_result=pd.DataFrame({'date':date, 'close':price})
         pred_result=pred_result.to_json()
         return pred_result
     
-    def append_data(self, date, price):
-        self.createdData[len(self.createdData)+1]=[date, price]
+    # def append_data(self, date, price):
+    #     self.createdData.loc[len(self.createdData)]=[date, price]
 
 if __name__ == "__main__":
     data = lstm_prediction()

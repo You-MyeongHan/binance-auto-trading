@@ -34,7 +34,7 @@ def sessions():
 @app.route("/api/predict", methods=['GET'])
 def predict():
     prediction=lstm_prediction()
-    data=prediction.create_one_data()
+    data=prediction.create_data()
     
     return jsonify(data)
 
