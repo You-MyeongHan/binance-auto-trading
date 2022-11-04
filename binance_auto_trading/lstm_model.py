@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
+from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import MinMaxScaler
 from keras.layers import LSTM,Dropout
@@ -77,11 +78,15 @@ class lstm_prediction:
         y_pred = self.scaler.inverse_transform(y_pred) # 10시간 뒤 코인 가격 예상        
         
         price=y_pred.reshape(1,-1)[0]           #최종 가격
-        date=self.df['date'].to_numpy()[11:]
+        date1=self.df['date'].to_numpy()[11:]
         for i in range(10):
-            date=np.append(date, (date[-1]+3600000))  #최종 날짜
+            date1=np.append(date1, (date1[len(date1)-1]+3600000))  #최종 날짜
+        
+        date2=np.array([])
+        for i in range(len(date1)):
+            date2=np.append(date2,str(datetime.fromtimestamp(int(date1[i])/1000)))
             
-        pred_result=pd.DataFrame({'date':date, 'close':price})
+        pred_result=pd.DataFrame({'date':date2, 'close':price})
         pred_result=pred_result.to_json()
         return pred_result
     
