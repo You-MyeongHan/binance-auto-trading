@@ -6,16 +6,10 @@
 pip install -r requirements.txt
 ```
 
-### RUN CLIENT
-***
-```
-python -m client
-```
-
 ### RUN SERVER
 ***
 ```
-python -m binance-auto-trading
+flask run
 ```
 
 ### Who We Are

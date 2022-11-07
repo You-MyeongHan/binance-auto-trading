@@ -62,11 +62,11 @@ class lstm_prediction:
         model.add(Dropout(0.2))
 
         # 예측값 1개
-        model.add(Dense(1, activation='linear'))
+        model.add(Dense(1, activation='tanh'))
         model.compile(loss='mean_squared_error', optimizer='adam')
         early_stop = EarlyStopping(monitor='loss', patience=5) # 학습률 낮아지면 조기 종료
 
-        model.fit(x_train, y_train, epochs=3, batch_size=20, callbacks=[early_stop]) #epoch 50이상으로
+        model.fit(x_train, y_train, epochs=50, batch_size=20, callbacks=[early_stop]) #epoch 50이상으로
     
         for i in range(10):    
             y_pred =model.predict(x_test) #처음 490개
