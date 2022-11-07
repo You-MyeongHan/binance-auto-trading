@@ -14,9 +14,13 @@ import ccxt
 import matplotlib.pyplot as plt
 
 class lstm_prediction:
-    def __init__(self):
+    def __init__(self,epochs,model,loss,activation):
+        self.epochs=int(epochs)
+        self.model=model
+        self.loss=loss
+        self.activation=activation
+
         self.scaler = MinMaxScaler()
-        
         self.binance=ccxt.binance()
         self.btc_ohlcv = self.binance.fetch_ohlcv("BTC/USDT",'1h')
         
@@ -62,18 +66,17 @@ class lstm_prediction:
         model.add(Dropout(0.2))
 
         # 예측값 1개
-        model.add(Dense(1, activation='tanh'))
-        model.compile(loss='mean_squared_error', optimizer='adam')
+        model.add(Dense(1, activation=self.activation))
+        model.compile(loss=self.loss, optimizer='adam')
         early_stop = EarlyStopping(monitor='loss', patience=5) # 학습률 낮아지면 조기 종료
 
-        model.fit(x_train, y_train, epochs=50, batch_size=20, callbacks=[early_stop]) #epoch 50이상으로
+        model.fit(x_train, y_train, epochs=self.epochs, batch_size=20, callbacks=[early_stop]) #epoch 50이상으로
     
         for i in range(10):    
             y_pred =model.predict(x_test) #처음 490개
             
             y_test.loc[len(y_test)+10]=[y_pred[-1][0]]
             x_test.loc[len(x_test)+10]=[y_pred[-1][0], float(y_test.iloc[-1]),float(y_test.iloc[-2]),float(y_test.iloc[-3]),float(y_test.iloc[-4]),float(y_test.iloc[-5]),float(y_test.iloc[-6]),float(y_test.iloc[-7]),float(y_test.iloc[-8]),float(y_test.iloc[-9])]
-            # one_hour_later=(self.df['date'].iloc[-1]+3600000*(i+1))
         
         y_pred = self.scaler.inverse_transform(y_pred) # 10시간 뒤 코인 가격 예상        
         

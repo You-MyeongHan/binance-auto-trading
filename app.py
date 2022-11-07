@@ -27,13 +27,13 @@ def sessions():
     logger.info("Starting")
     return jsonify({'message':"home"})
 
-# @app.route("/api/test", methods=['GET'])
-# def test():
-#     return jsonify({'message':"success"})
-
 @app.route("/api/predict", methods=['GET'])
 def predict():
-    prediction=lstm_prediction()
+    epochs=request.args.get('epochs', default=50)
+    model=request.args.get('model', default="lstm")
+    loss=request.args.get('loss', default="mean_squared_error")
+    activation=request.args.get('activation', default="tanh")
+    prediction=lstm_prediction(epochs,model,loss,activation)
     data=prediction.create_data()
     
     return jsonify(data)
