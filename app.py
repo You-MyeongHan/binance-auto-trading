@@ -38,15 +38,12 @@ def predict():
     
     return jsonify(data)
 
-@app.route("/api/get_balance", methods=['GET'])
-def get_balance():
-    dataLen=request.form['dataLen']
-    print(dataLen)
-    return jsonify({'result':"success"})
-
-@app.route("/api/createSynthCoin")
-def createSynthCoin():
-    print("checkPoint2")
+@app.route("/api/login",methods=['POST'])
+def login():
+    id=request.form['id']
+    password=request.form['password']
+    data={'ok':'ok'}
+    return jsonify(data)
 
 if __name__ == "__main__":
     socketio.run(app)
