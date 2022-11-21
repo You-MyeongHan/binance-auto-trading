@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import MinMaxScaler
 from keras.layers import LSTM,Dropout
 from keras.models import Sequential
 from keras.layers import Dense
