@@ -16,9 +16,10 @@ from binance_auto_trading.lstm_model import lstm_prediction
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] ="sqlite:///data/crypto_trading.db"
+app.config["SQLALCHEMY_DATABASE_URI"] ="sqlite:///data/userData.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
+app_ctx = app.app_context()
+app_ctx.push()
 db = SQLAlchemy(app)
 db.init_app(app)
 
@@ -30,13 +31,14 @@ config = Config()
 prediction=Prediction()
 
 class User(db.Model):
-    __tablename__="users"
+    __tablename__="user"
     id=db.Column(db.String, primary_key=True)
     password=db.Column(db.String, nullable=False)
     api_key=db.Column(db.String)
     sec_key=db.Column(db.String)
     
-db.create_all()
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 @app.route('/')
 def sessions():
@@ -58,8 +60,17 @@ def predict():
 def login():
     id=request.form['id']
     password=request.form['password']
+    
+    try:
+        data=User.query.filter_by()
+    
     data={'ok':'ok'}
     return jsonify(data)
+
+@app.route("/api/register",methods=['POST'])
+def register():
+    id=request.form['id']
+    password=request.form['password']
 
 if __name__ == "__main__":
     socketio.run(app)
