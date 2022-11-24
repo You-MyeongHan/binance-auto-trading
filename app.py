@@ -22,6 +22,7 @@ app_ctx = app.app_context()
 app_ctx.push()
 db = SQLAlchemy(app)
 db.init_app(app)
+db.create_all()
 
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -58,12 +59,19 @@ def predict():
 
 @app.route("/api/login",methods=['POST'])
 def login():
-    id=request.form['id']
-    password=request.form['password']
+    user=User()
+    user.id=request.form['id']
+    user.password=request.form['password']
+    db.session.add(user)
+    db.session.commit()
     
     try:
-        data=User.query.filter_by()
-    
+        data=User.query.filter_by(id=id, password=password).firts()
+        if data is not None:
+            pass
+    except:
+        
+        return "Don't login"
     data={'ok':'ok'}
     return jsonify(data)
 
