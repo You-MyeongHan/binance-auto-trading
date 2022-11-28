@@ -22,7 +22,6 @@ app_ctx = app.app_context()
 app_ctx.push()
 db = SQLAlchemy(app)
 db.init_app(app)
-db.create_all()
 
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -38,8 +37,16 @@ class User(db.Model):
     api_key=db.Column(db.String)
     sec_key=db.Column(db.String)
     
-    def check_password(self, password):
-        return check_password_hash(self.password, password)
+    def __repr__(self):
+        return '<User %r>' % self.username
+
+    # def check_password(self, password):
+    #     if password == self.password:
+    #         return True
+    #     else:
+    #         return False    
+
+# db.create_all()
 
 @app.route('/')
 def sessions():
@@ -59,19 +66,22 @@ def predict():
 
 @app.route("/api/login",methods=['POST'])
 def login():
-    user=User()
-    user.id=request.form['id']
-    user.password=request.form['password']
-    db.session.add(user)
-    db.session.commit()
+    # user=User()
+    # user.id=request.form['id']
+    # user.password=request.form['password']
+    # db.session.add(user)
+    # db.session.commit()
     
-    try:
-        data=User.query.filter_by(id=id, password=password).firts()
-        if data is not None:
-            pass
-    except:
-        
-        return "Don't login"
+    # User.query.filter_by(id=request.form['id']).first()
+    
+    # try:
+    #     data=User.check_password(user.password)
+    #     if data is not None:
+    #         pass
+    # except:
+    #     return "Don't login"
+    
+    
     data={'ok':'ok'}
     return jsonify(data)
 
